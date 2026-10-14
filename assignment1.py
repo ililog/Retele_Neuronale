@@ -1,5 +1,7 @@
 import pathlib
 import math
+inversabil:bool = 1
+
 def get_number(s:str) -> float:
     sign:float = 1
     number:float = 1.0
@@ -42,6 +44,7 @@ def load_system(path: pathlib.Path) -> tuple[list[list[float]], list[float]]:
     return A, B
 
 def determinant(matrix: list[list[float]]) -> float:
+    global inversabil
     ans: float = 0
     n = len(matrix)
     if n == 2:
@@ -62,6 +65,8 @@ def determinant(matrix: list[list[float]]) -> float:
             lin = (lin+1)%n
             col = (col-1+n)%n
         ans += (plus - minus)
+    if ans == 0: 
+        inversabil = 0
     return ans
 
 def trace(matrix: list[list[float]]) -> float: #trace
@@ -112,6 +117,8 @@ def replaced_column_matrix(matrix: list[list[float]], vector: list[float], index
 
 def solve_cramer(matrix: list[list[float]], vector: list[float]) -> list[float]:
     numitor = determinant(matrix)
+    if (numitor == 0):
+        return
     n = len(matrix)
     ans = []
     for j in range(n):
@@ -168,7 +175,10 @@ if (__name__ == "__main__"):
     print(f"{determinant(A)=}")
     print(f"{trace(A)=}")
     print(f"{norm(B)=}")
-    print(f"{transpose(A)=}")
-    print(f"{multiply(A, B)=}")
-    print(f"{solve_cramer(A, B)=}")
-    print(f"{solve(A, B)=}")
+    if (inversabil == 1):
+        print(f"{transpose(A)=}")
+        print(f"{multiply(A, B)=}")
+        print(f"{solve_cramer(A, B)=}")
+        print(f"{solve(A, B)=}")
+    else: 
+        print("Matricea nu este inversabilă (determinantul este 0)")
